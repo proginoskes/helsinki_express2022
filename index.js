@@ -15,6 +15,9 @@ let persons = require('./db.json');
 // json parser for POST
 app.use(express.json())
 
+// static page server from express
+app.use(express.static('build'))
+
 // morgan for request logging
 app.use(morgan(':method :url :status :res[content-length] - :response-time ms :response-body'))
 

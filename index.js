@@ -81,12 +81,13 @@ app.get('/api/persons/:id', (request,response, next)=>{
 
 })
 
-// app.delete('/api/persons/:id', (request, response)=>{
-//     const id=Number(request.params.id);
-//     persons=persons.filter(person=>person.id!==id);
-//     //console.log(persons);
-//     response.status(204).end()
-// })
+app.delete('/api/persons/:id', (request, response, next)=>{
+    Person.findByIdAndRemove(request.params.id)
+        .then(result => {
+            response.status(204).end();
+        })
+        .catch(error=>next(error));
+})
 
 // add a number
 app.post('/api/persons', (request, response)=>{
@@ -113,21 +114,23 @@ app.post('/api/persons', (request, response)=>{
         response.json(savedPerson);
     });
 
-    // if(persons.some(person=>person.name==body.name)){
-    //     return response.status(400).json({
-    //         error: 'name already in phonebook'
-    //     })
-    // }
+})
 
-    // const person = {
-    //     id: generateID(),
-    //     name: body.name,
-    //     number: body.number
-    // }
-    
-    //Object.assign(persons, [...persons, person]);
+// update a number
+app.put('/api/person/:id', (request,response,next)=>{
+    const body = response.body;
 
-    //response.json(person)
+    const person ={
+        name: body.name,
+        number: body.number
+    }
+
+    Person.findByIdAndUpdate(request.params.id, person, {new: true})
+        .then(updatedPerson => {
+            response.json(updatedPerson);
+        })
+        .catch(error => next(error));
+
 })
 
 // this has to be the last loaded middleware.

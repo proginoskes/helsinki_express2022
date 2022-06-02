@@ -30,7 +30,7 @@ app.use(cors());
 // unknown endpoitn middleware
 const unknownEndpoint = (request, response) => {
     response.status(404).send({ error: 'unknown endpoint' })
-  }
+}
   
   // handler of requests with unknown endpoint
 
@@ -39,7 +39,7 @@ const errorHandler = (error, request, response, next) => {
     console.error(error.message)
   
     if (error.name === 'CastError') {
-      return response.status(400).send({ error: 'malformatted id' })
+        return response.status(400).send({ error: 'malformatted id' })
     } else if (error.name === 'ValidationError'){
         return response.status(400).json({error:error.message})
     }
@@ -66,9 +66,7 @@ app.get('/info', (request, response) => {
 app.get('/api/persons', (request, response) => {
     Person.find({}).then(persons => {
         response.json(persons)
-    })
-    //console.log(persons);
-    //response.json(persons)
+    }).catch(error=>next(error))
 })
 
 app.get('/api/persons/:id', (request,response, next)=>{
@@ -94,22 +92,10 @@ app.delete('/api/persons/:id', (request, response, next)=>{
 // add a number
 app.post('/api/persons', (request, response)=>{
     const body = request.body;
-    
-    // if(body.name === undefined){
-    //     return response.status(400).json({
-    //         error: 'name missing'
-    //     })
-    // }
-
-    // if(body.number===undefined){
-    //     return response.status(400).json({
-    //         error: 'number missing'
-    //     })
-    // }
 
     const person = new Person({
         name: body.name,
-        number: body. number
+        number: body.number
     });
 
     person.save().then(savedPerson =>{
@@ -121,16 +107,16 @@ app.post('/api/persons', (request, response)=>{
 // update a number
 app.put('/api/persons/:id', (request,response,next)=>{
     // deconstruct body -> {name, number}
-    const {name, number} = request.body;
+    //const {name, number} = request.body;
 
-    // const person ={
-    //     name: body.name,
-    //     number: body.number
-    // }
+    const person ={
+        name: body.name,
+        number: body.number
+    }
 
     Person.findByIdAndUpdate(
         request.params.id, 
-        {name, number}, 
+        person, 
         {new: true, runValidators: true, context: 'query'}
     )
         .then(updatedPerson => {

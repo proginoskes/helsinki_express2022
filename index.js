@@ -25,6 +25,30 @@ app.use(morgan(':method :url :status :res[content-length] - :response-time ms :r
 // cors for cross origin resource sharing
 app.use(cors());
 
+//app.use(requestLogger)
+
+// unknown endpoitn middleware
+const unknownEndpoint = (request, response) => {
+    response.status(404).send({ error: 'unknown endpoint' })
+  }
+  
+  // handler of requests with unknown endpoint
+  app.use(unknownEndpoint)
+
+// error handling middleware
+const errorHandler = (error, request, response, next) => {
+    console.error(error.message)
+  
+    if (error.name === 'CastError') {
+      return response.status(400).send({ error: 'malformatted id' })
+    } 
+  
+    next(error)
+  }
+  
+  // this has to be the last loaded middleware.
+  app.use(errorHandler)
+
 // REST funcs
 app.get('/', (request, response) => {
     response.send('<h1>Welcome to Phonebook Server</h1>')
@@ -48,13 +72,15 @@ app.get('/api/persons', (request, response) => {
     //response.json(persons)
 })
 
-app.get('/api/persons/:id', (request,response)=>{
+app.get('/api/persons/:id', (request,response, next)=>{
 
     Person.findById(request.params.id).then(person => {
-        response.json(person)
-    }).catch(()=>
-        response.status(404).end()
-    )
+        if(person){
+            response.json(person);
+        }else{
+            response.status(404).end();
+        }
+    }).catch((error)=>next(error));
 
 })
 

@@ -98,16 +98,18 @@ app.post('/api/persons', (request, response)=>{
         number: body.number
     });
 
-    person.save().then(savedPerson =>{
-        response.json(savedPerson);
-    }).catch(error=>next(error));
+    person.save()
+        .then(savedPerson =>{
+            response.json(savedPerson);
+        })
+        .catch(error=>next(error));
 
 })
 
 // update a number
 app.put('/api/persons/:id', (request,response,next)=>{
     // deconstruct body -> {name, number}
-    //const {name, number} = request.body;
+    const body = request.body;
 
     const person ={
         name: body.name,

@@ -118,7 +118,7 @@ app.post('/api/persons', (request, response)=>{
 
 // update a number
 app.put('/api/persons/:id', (request,response,next)=>{
-    const body = response.body;
+    const body = request.body;
 
     const person ={
         name: body.name,

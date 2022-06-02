@@ -36,12 +36,13 @@ const unknownEndpoint = (request, response) => {
 
 // error handling middleware
 const errorHandler = (error, request, response, next) => {
+    //console.log('~~~~~~~~~~~~~~~~~~')
     console.error(error.message)
   
     if (error.name === 'CastError') {
         return response.status(400).send({ error: 'malformatted id' })
     } else if (error.name === 'ValidationError'){
-        return response.status(400).json({error:error.message})
+        return response.status(400).json({error: error.message})
     }
   
     next(error)
@@ -90,7 +91,7 @@ app.delete('/api/persons/:id', (request, response, next)=>{
 })
 
 // add a number
-app.post('/api/persons', (request, response)=>{
+app.post('/api/persons', (request, response, next)=>{
     const body = request.body;
 
     const person = new Person({

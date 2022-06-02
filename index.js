@@ -8,13 +8,10 @@ const app = express();
 
 const Person = require('./models/persons');
 
-
 morgan.token('response-body', function getId (req, res) {
     return JSON.stringify(req.body)
 })
 
-// is this legal?? do we need to make this immutable?
-//let persons = require('./db.json');
 
 // json parser for POST
 app.use(express.json())
@@ -27,14 +24,6 @@ app.use(morgan(':method :url :status :res[content-length] - :response-time ms :r
 
 // cors for cross origin resource sharing
 app.use(cors());
-
-//utilities
-// const generateID = () =>{
-//     const maxID=persons.length>0
-//         ? Math.max(...persons.map(n=>n.id))
-//         : 0
-//     return maxID+1
-// }
 
 // REST funcs
 app.get('/', (request, response) => {

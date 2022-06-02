@@ -28,12 +28,11 @@ app.use(cors());
 //app.use(requestLogger)
 
 // unknown endpoitn middleware
-// const unknownEndpoint = (request, response) => {
-//     response.status(404).send({ error: 'unknown endpoint' })
-//   }
+const unknownEndpoint = (request, response) => {
+    response.status(404).send({ error: 'unknown endpoint' })
+  }
   
-//   // handler of requests with unknown endpoint
-//   app.use(unknownEndpoint)
+  // handler of requests with unknown endpoint
 
 // error handling middleware
 const errorHandler = (error, request, response, next) => {
@@ -132,6 +131,7 @@ app.post('/api/persons', (request, response)=>{
 })
 
 // this has to be the last loaded middleware.
+app.use(unknownEndpoint)
 app.use(errorHandler)
 
 const PORT = process.env.PORT //|| 3001

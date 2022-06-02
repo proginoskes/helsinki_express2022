@@ -101,8 +101,8 @@ app.post('/api/persons', (request, response, next)=>{
     })
 
     Person.find({name:body.name}).then(result => {
-        if(result){
-            response.status(403).send({ error: 'cannot add records with duplicate names' })
+        if(result.length > 0){
+            response.status(403).send({ error: `cannot add duplicate entry for ${body.name} to database` })
         } else {
             person.save()
                 .then(savedPerson =>{

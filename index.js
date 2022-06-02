@@ -60,13 +60,8 @@ app.get('/api/persons', (request, response) => {
 })
 
 app.get('/api/persons/:id', (request,response)=>{
-    //console.log(persons);
-    const curr_id=Number(request.params.id);
-    // const person=persons.find(person=>{
-    //     return person.id===curr_id;
-    // });
 
-    Person.find({id:curr_id}).then(person => {
+    Person.findById(request.params.id).then(person => {
         response.json(person)
     }).catch(()=>
         response.status(404).end()
@@ -74,44 +69,53 @@ app.get('/api/persons/:id', (request,response)=>{
 
 })
 
-app.delete('/api/persons/:id', (request, response)=>{
-    const id=Number(request.params.id);
-    persons=persons.filter(person=>person.id!==id);
-    //console.log(persons);
-    response.status(204).end()
-})
+// app.delete('/api/persons/:id', (request, response)=>{
+//     const id=Number(request.params.id);
+//     persons=persons.filter(person=>person.id!==id);
+//     //console.log(persons);
+//     response.status(204).end()
+// })
 
 // add a number
 app.post('/api/persons', (request, response)=>{
     const body = request.body;
     
-    if(!body.name){
+    if(body.name === undefined){
         return response.status(400).json({
             error: 'name missing'
         })
     }
 
-    if(!body.number){
+    if(body.number===undefined){
         return response.status(400).json({
             error: 'number missing'
         })
     }
 
-    if(persons.some(person=>person.name==body.name)){
-        return response.status(400).json({
-            error: 'name already in phonebook'
-        })
-    }
-
-    const person = {
-        id: generateID(),
+    const person = new Person({
         name: body.name,
-        number: body.number
-    }
-    
-    Object.assign(persons, [...persons, person]);
+        number: body. number
+    });
 
-    response.json(person)
+    person.save().then(savedPerson =>{
+        response.json(savedPerson);
+    });
+
+    // if(persons.some(person=>person.name==body.name)){
+    //     return response.status(400).json({
+    //         error: 'name already in phonebook'
+    //     })
+    // }
+
+    // const person = {
+    //     id: generateID(),
+    //     name: body.name,
+    //     number: body.number
+    // }
+    
+    //Object.assign(persons, [...persons, person]);
+
+    //response.json(person)
 })
 
 const PORT = process.env.PORT //|| 3001

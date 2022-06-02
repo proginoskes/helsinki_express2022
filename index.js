@@ -28,12 +28,12 @@ app.use(cors());
 //app.use(requestLogger)
 
 // unknown endpoitn middleware
-const unknownEndpoint = (request, response) => {
-    response.status(404).send({ error: 'unknown endpoint' })
-  }
+// const unknownEndpoint = (request, response) => {
+//     response.status(404).send({ error: 'unknown endpoint' })
+//   }
   
-  // handler of requests with unknown endpoint
-  app.use(unknownEndpoint)
+//   // handler of requests with unknown endpoint
+//   app.use(unknownEndpoint)
 
 // error handling middleware
 const errorHandler = (error, request, response, next) => {

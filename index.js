@@ -101,14 +101,16 @@ app.post('/api/persons', (request, response, next)=>{
     });
 
     Person.find({name:body.name}).then(result => {
-        response.status(404).end()
-    }).catch(
-        person.save()
-            .then(savedPerson =>{
-                response.json(savedPerson);
-            })
-            .catch(error=>next(error))
-    );
+        if(result){
+            response.status(404).end()
+        } else {
+            person.save()
+                .then(savedPerson =>{
+                    response.json(savedPerson);
+                })
+                .catch(error=>next(error))
+        }
+    }).catch(()=>next(error));
 
 })
 

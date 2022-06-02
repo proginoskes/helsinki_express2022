@@ -26,7 +26,7 @@ const personSchema = new mongoose.Schema({
       minLength: 8,
       validate: {
         validator: v => {
-          const reg = new RegExp('(\\d{2,3})-(\\d+)');
+          const reg = new RegExp('^\\d{2,3})-\\d+$');
           console.log(`${v}: ${reg.test(v)}`)
           return reg.test(v)
         },

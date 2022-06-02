@@ -10,7 +10,8 @@
     "build:ui": "rm -rf ./build && cd ../helsinki_fullstack/part02/02phonebook && npm run build && cp -r ./build ../../../helsinki_express",
     "deploy": "git push heroku main",
     "deploy:full": "npm run build:ui && git add . && git commit -m uibuild && npm run deploy",
-    "logs:prod": "heroku logs --tail"
+    "logs:prod": "heroku logs --tail",
+    "lint" : "eslint ."
   },
   "author": "Matt Koucky",
   "license": "ISC",
@@ -22,6 +23,7 @@
     "morgan": "^1.10.0"
   },
   "devDependencies": {
+    "eslint": "^8.16.0",
     "nodemon": "^2.0.16"
   }
 }

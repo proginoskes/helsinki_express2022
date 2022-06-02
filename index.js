@@ -102,7 +102,7 @@ app.post('/api/persons', (request, response, next)=>{
 
     Person.find({name:body.name}).then(result => {
         if(result){
-            response.status(404).end()
+            response.status(403).send({ error: 'cannot add records with duplicate names' })
         } else {
             person.save()
                 .then(savedPerson =>{

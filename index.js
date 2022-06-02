@@ -62,6 +62,7 @@ app.get('/info', (request, response) => {
             `
         )
     })
+    .catch(error=>next(error));
 })
 
 app.get('/api/persons', (request, response) => {
@@ -99,11 +100,15 @@ app.post('/api/persons', (request, response, next)=>{
         number: body.number
     });
 
-    person.save()
-        .then(savedPerson =>{
-            response.json(savedPerson);
-        })
-        .catch(error=>next(error));
+    Person.find({name:body.name}).then(result => {
+        response.status(404).end()
+    }).catch(
+        person.save()
+            .then(savedPerson =>{
+                response.json(savedPerson);
+            })
+            .catch(error=>next(error))
+    );
 
 })
 
@@ -118,10 +123,10 @@ app.put('/api/persons/:id', (request,response,next)=>{
     }
 
     Person.findByIdAndUpdate(
-        request.params.id, 
-        person, 
-        {new: true, runValidators: true, context: 'query'}
-    )
+            request.params.id, 
+            person, 
+            {new: true, runValidators: true, context: 'query'}
+        )
         .then(updatedPerson => {
             response.json(updatedPerson);
         })

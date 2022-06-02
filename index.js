@@ -45,9 +45,7 @@ const errorHandler = (error, request, response, next) => {
   
     next(error)
   }
-  
-  // this has to be the last loaded middleware.
-  app.use(errorHandler)
+
 
 // REST funcs
 app.get('/', (request, response) => {
@@ -132,6 +130,9 @@ app.post('/api/persons', (request, response)=>{
 
     //response.json(person)
 })
+
+// this has to be the last loaded middleware.
+app.use(errorHandler)
 
 const PORT = process.env.PORT //|| 3001
 app.listen(PORT, () => {

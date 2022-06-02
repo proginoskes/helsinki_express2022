@@ -1,8 +1,12 @@
+require('dotenv').config()
+
 const { response } = require('express');
 const express = require('express');
 const morgan = require('morgan');
 const cors = require('cors');
 const app = express();
+
+const Person = require('./models/persons');
 
 
 morgan.token('response-body', function getId (req, res) {
@@ -10,7 +14,7 @@ morgan.token('response-body', function getId (req, res) {
 })
 
 // is this legal?? do we need to make this immutable?
-let persons = require('./db.json');
+//let persons = require('./db.json');
 
 // json parser for POST
 app.use(express.json())
@@ -25,45 +29,49 @@ app.use(morgan(':method :url :status :res[content-length] - :response-time ms :r
 app.use(cors());
 
 //utilities
-const generateID = () =>{
-    const maxID=persons.length>0
-        ? Math.max(...persons.map(n=>n.id))
-        : 0
-    return maxID+1
-}
+// const generateID = () =>{
+//     const maxID=persons.length>0
+//         ? Math.max(...persons.map(n=>n.id))
+//         : 0
+//     return maxID+1
+// }
 
 // REST funcs
 app.get('/', (request, response) => {
     response.send('<h1>Welcome to Phonebook Server</h1>')
 })
 app.get('/info', (request, response) => {
-    response.send(
-        `
-        <p>Phonebook has info for ${persons.length} people</p>
-        <p>${Date()}</p>
-        `
-    )
+    Person.find({}).then(persons =>{
+        response.send(
+            `
+            <p>Phonebook has info for ${persons.length} people</p>
+            <p>${Date()}</p>
+            `
+        )
+    })
 })
-  
+
 app.get('/api/persons', (request, response) => {
-    
+    Person.find({}).then(persons => {
+        response.json(persons)
+    })
     //console.log(persons);
-    response.json(persons)
+    //response.json(persons)
 })
 
 app.get('/api/persons/:id', (request,response)=>{
     //console.log(persons);
-    const id=Number(request.params.id);
-    const person=persons.find(person=>{
-        return person.id===id;
-    });
+    const curr_id=Number(request.params.id);
+    // const person=persons.find(person=>{
+    //     return person.id===curr_id;
+    // });
 
-    if(person){
+    Person.find({id:curr_id}).then(person => {
         response.json(person)
-    }else{
+    }).catch(()=>
         response.status(404).end()
-    }
-    console.log(person);
+    )
+
 })
 
 app.delete('/api/persons/:id', (request, response)=>{
@@ -106,7 +114,7 @@ app.post('/api/persons', (request, response)=>{
     response.json(person)
 })
 
-const PORT = process.env.PORT || 3001
+const PORT = process.env.PORT //|| 3001
 app.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`)
 })

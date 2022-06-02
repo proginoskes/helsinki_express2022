@@ -9,14 +9,16 @@
     "dev": "nodemon index.js",
     "build:ui": "rm -rf ./build && cd ../helsinki_fullstack/part02/02phonebook && npm run build && cp -r ./build ../../../helsinki_express",
     "deploy": "git push heroku main",
-    "deploy:full": "npm run build:ui && git add . && git commit -m uibuild && npm run deploy",    
+    "deploy:full": "npm run build:ui && git add . && git commit -m uibuild && npm run deploy",
     "logs:prod": "heroku logs --tail"
   },
   "author": "Matt Koucky",
   "license": "ISC",
   "dependencies": {
     "cors": "^2.8.5",
+    "dotenv": "^16.0.1",
     "express": "^4.18.1",
+    "mongoose": "^6.3.5",
     "morgan": "^1.10.0"
   },
   "devDependencies": {
